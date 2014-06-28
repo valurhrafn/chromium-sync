@@ -17,7 +17,7 @@
 from google.appengine.api import users
 
 import webapp2
-
+import logging
 # For datastore
 import cgi
 import urllib
@@ -26,47 +26,31 @@ from google.appengine.ext import ndb
 # ************** MainHandler ************* #
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write('Hello world!')
+        content = self.response.headers
+        logging.warning(content)
+        self.response.write(content)
 
-
-# ************** GetUser ************* #
-class GetUser(webapp2.RequestHandler):
-
+class WriteName(webapp2.RequestHandler):
     def get(self):
-        # Checks for active Google account session
+        self.response.write('Gunnar')
+
+class GetUserInfo(webapp2.RequestHandler):
+    def get(self):
         user = users.get_current_user()
-
         if user:
-            self.response.headers['Content-Type'] = 'text/plain'
-            self.response.write('Hello, ' + user.nickname())
+            greeting = ('Welcome, %s! (<a href="%s">sign out</a>)' %
+                        (user.nickname(), users.create_logout_url('/')))
         else:
-            self.redirect(users.create_login_url(self.request.uri))
+            greeting = ('<a href="%s">Sign in or register</a>.' %
+                        users.create_login_url('/'))
 
-# ************** HasData ************* #
-class HasData(webapp2.RequestHandler):
-  def get(self):
-    #TODO does user have data
-
-class PostData(webapp2.RequestHandler):
-  def post(self):
-    #TODO recieve data from client
-
-class GetSyncData(object):
-  """docstring for GetSyncData"""
-  def __init__(self, arg):
-    super(GetSyncData, self).__init__()
-    self.arg = arg
-
-    #implement get data for user
-    # property user.email() or user.user_id()
+        self.response.out.write("<html><body>%s</body></html>" % greeting)
 
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
-    ('/GetUser', GetUser),
-    ('/HasData', HasData),
-    ('/PostData', PostData),
-    ('/GetSyncData', GetSyncData)
+    ('/GetUserInfo', GetUserInfo),
+    ('/WriteName', WriteName)
 ], debug=True)
 
 

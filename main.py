@@ -23,6 +23,14 @@ import cgi
 import urllib
 from google.appengine.ext import ndb
 
+class UserId(ndb.Model):
+  content = ndb.StringProperty()
+  date = ndb.DateTimeProperty(auto_now_add=True)
+
+  @classmethod
+  def query_user(cls, ancestor_key):
+    return cls.query(ancestor=ancestor_key).order(-cls.date)
+
 # ************** MainHandler ************* #
 class MainHandler(webapp2.RequestHandler):
     def get(self):
@@ -33,22 +41,38 @@ class MainHandler(webapp2.RequestHandler):
 class GetUser(webapp2.RequestHandler):
 
     def get(self):
+        self.response.out.write('<html><body>')
+        client_id = self.request.get('client_id')
+        ancestor_key = ndb.Key("ID", client_id or "*no_id*")
+        userids = UserId.query_user(ancestor_key).fetch(20)
+        self.response.out.write('her er eitthvad')
+        for userid in userids:
+            self.response.out.write('<blockquote>%s</blockquote>' %
+                              cgi.escape(userid.content))
         # Checks for active Google account session
-        user = users.get_current_user()
+        # user = users.get_current_user()
 
-        if user:
-            self.response.headers['Content-Type'] = 'text/plain'
-            self.response.write('Hello, ' + user.nickname())
-        else:
-            self.redirect(users.create_login_url(self.request.uri))
+        # if user:
+        #     self.response.headers['Content-Type'] = 'text/plain'
+        #     self.response.write('Hello, ' + user.nickname())
+        # else:
+        #     self.redirect(users.create_login_url(self.request.uri))
+        self.response.out.write('</body></html>')
+    def post(self):
+        pass
 
 # ************** HasData ************* #
 class HasData(webapp2.RequestHandler):
   def get(self):
+    pass
     #TODO does user have data
 
 class PostData(webapp2.RequestHandler):
   def post(self):
+    client_id = self.request.get('client_id')
+    chrome_user = UserId(parent=ndb.Key("ID", client_id or "*no_id*"),
+                        content = self.request.get('client_id'))
+    chrome_user.put()
     #TODO recieve data from client
 
 class GetSyncData(object):
@@ -63,10 +87,10 @@ class GetSyncData(object):
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
-    ('/GetUser', GetUser),
-    ('/HasData', HasData),
-    ('/PostData', PostData),
-    ('/GetSyncData', GetSyncData)
+    ('/GetUser/', GetUser),
+    ('/HasData/', HasData),
+    ('/chrome-sync/command/', PostData),
+    ('/GetSyncData/', GetSyncData)
 ], debug=True)
 
 

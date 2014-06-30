@@ -1,0 +1,33 @@
+Real chrome:
+
+POST /chrome-sync/command/?client=Google+Chrome&client_id=RtH3%2BgSLi2u3yWRREyhcRg%3D%3D HTTP/1.1
+Host: clients4.google.com
+Connection: keep-alive
+Content-Length: 597
+Authorization: Bearer ya29.MgCJY8WFCcLVvCQAAAB3iOdnx2soPBfiT_RNdy6hdYj1B7nuMWXRzZ73d5czlJALoTQ97l_oyPHvHqyMgNw
+Content-Type: application/octet-stream
+User-Agent: Chrome WIN 35.0.1916.153 (274914) channel(stable)
+Accept-Encoding: gzip,deflate,sdch
+Accept-Language: en-US,en;q=0.8,is;q=0.6,nb;q=0.4
+
+
+chromium dev
+
+
+POST /chrome-sync/command/?client=Chromium&client_id=gnKYu4fG1iutvKM3QNtUGg%3D%3D HTTP/1.1
+Host: localhost:9080
+Connection: keep-alive
+Content-Length: 174
+Authorization: Bearer ya29.MgDQR-uniIZMYSkAAACxOcl1Ny7nr2jFPWToPBxsWwnTmaq2aQXeuUMHmvsIpbhlSYGHyAODYkBhyHB6QRs
+Content-Type: application/octet-stream
+User-Agent: Chrome WIN 38.0.2075.0 (280513)-devel
+Accept-Encoding: gzip,deflate
+Accept-Language: en-US,en;q=0.8,is;q=0.6,nb;q=0.4
+
+
+HTTP/1.1 200 OK
+content-type: text/html; charset=utf-8
+cache-control: no-cache
+Content-Length: 0
+Server: Development/2.0
+Date: Sat, 28 Jun 2014 18:03:32 GMT

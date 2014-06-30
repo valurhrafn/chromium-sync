@@ -93,6 +93,3 @@ app = webapp2.WSGIApplication([
     ('/GetSyncData/', GetSyncData)
 ], debug=True)
 
-
-
-
